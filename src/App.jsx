@@ -1,26 +1,53 @@
-// import React from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Routes,
+//   Navigate,
+// } from "react-router-dom";
 // import Dashboard from "./components/Dashboard";
 // import Departments from "./components/Departments";
 // import CreateDepartment from "./components/CreateDepartments/index";
 // import Login from "./components/LoginPage";
 // import "./App.css";
+// import EmployeeCreate from "./components/Employees";
+// import EmployeeEdit from "./components/EmployeeEdit"; // Import EmployeeEdit component
+// import Tasks from "./components/Tasks";
+// import EmployeeList from "./components/EmployeList";
+// import { useState } from "react";
 
 // function App() {
+//   const token = localStorage.getItem("refresh_token");
+//   const [selectedDepartment, setSelectedDepartment] = useState(null);
+
 //   return (
 //     <Router>
 //       <Routes>
-//         <Route path="/" element={<Dashboard />}>
-//           <Route path="/" element={<Login />} />
-//           <Route path="departments" element={<Departments />} />
+//         <Route
+//           path="/"
+//           element={!token ? <Login /> : <Navigate to="/dashboard" replace />}
+//         />
+//         <Route
+//           path="/dashboard/*"
+//           element={token ? <Dashboard /> : <Navigate to="/" replace />}>
+//           <Route
+//             path="departments"
+//             element={<Departments department={selectedDepartment} />}
+//           />
 //           <Route path="create-department" element={<CreateDepartment />} />
+//           <Route path="employee-create" element={<EmployeeCreate />} />
+//           <Route path="employees/update/:id" element={<EmployeeEdit />} />
+//           <Route path="tasks" element={<Tasks />} />
+//           <Route path="login" element={<Login />} />
+//           <Route path="employees" element={<EmployeeList />} />
 //         </Route>
+//         <Route path="*" element={<Navigate to="/" replace />} />
 //       </Routes>
 //     </Router>
 //   );
 // }
 
-// export default App;import React, { useEffect, useState } from "react";
+// export default App;
+
 import {
   BrowserRouter as Router,
   Route,
@@ -31,60 +58,39 @@ import Dashboard from "./components/Dashboard";
 import Departments from "./components/Departments";
 import CreateDepartment from "./components/CreateDepartments/index";
 import Login from "./components/LoginPage";
-import instance from "./components/Service/index";
 import "./App.css";
-import { useEffect, useState } from "react";
+import EmployeeCreate from "./components/Employees";
+import EmployeeEdit from "./components/EmployeeEdit";
+import Tasks from "./components/Tasks";
+import EmployeeList from "./components/EmployeList";
+import { useState } from "react";
 
 function App() {
-  const [authStatus, setAuthStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const response = await instance.get("/auth/verify", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setAuthStatus(response.status === 200);
-        } else {
-          setAuthStatus(false);
-        }
-      } catch (error) {
-        console.error("Error checking authentication:", error);
-        setAuthStatus(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>; // Display loading indicator while checking auth
-  }
+  const token = localStorage.getItem("refresh_token");
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
 
   return (
     <Router>
       <Routes>
         <Route
           path="/"
-          element={
-            authStatus === false ? (
-              <Login />
-            ) : (
-              <Navigate to="/dashboard" replace />
-            )
-          }
+          element={!token ? <Login /> : <Navigate to="/dashboard" replace />}
         />
         <Route
-          path="/dashboard/*" // Ensure this path matches the nested routes
-          element={<Dashboard />}>
-          <Route path="departments" element={<Departments />} />
+          path="/dashboard/*"
+          element={token ? <Dashboard /> : <Navigate to="/" replace />}>
+          <Route
+            path="departments"
+            element={<Departments department={selectedDepartment} />}
+          />
           <Route path="create-department" element={<CreateDepartment />} />
+          <Route path="employee-create" element={<EmployeeCreate />} />
+          <Route path="employees/update/:id" element={<EmployeeEdit />} />{" "}
+          {/* Change to EmployeeEdit */}
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="employees" element={<EmployeeList />} />
         </Route>
+        {/* Redirect to login if the route does not match */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
