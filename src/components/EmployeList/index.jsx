@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
-import instance from "../Service/index"; // Axios instance
+import instance from "../Service/index";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Use navigate for routing
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -40,7 +40,6 @@ const EmployeeList = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // Refresh the list of employees after successful deletion
       setEmployees(employees.filter((employee) => employee._id !== id));
     } catch (err) {
       setError("Failed to delete employee.");
@@ -54,7 +53,7 @@ const EmployeeList = () => {
 
   return (
     <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-md">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap gap-y-4 items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold">Employees List</h2>
         <button
           onClick={() => navigate("/dashboard/employee-create")}

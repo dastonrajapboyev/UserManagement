@@ -1,37 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet, Navigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useNavigate } from "react-router-dom";
 import {
   OfficeBuildingIcon,
   UserGroupIcon,
   ClipboardListIcon,
   MenuIcon,
   XIcon,
+  LogoutIcon,
 } from "@heroicons/react/solid";
 
-const Dashboard = () => {
+const Dashboard = ({ onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const token = localStorage.getItem("refresh_token");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Add event listener for window resize
     const storedToken = localStorage.getItem("refresh_token");
-    console.log("Stored token:", storedToken); // Debugging log
+    console.log("Stored token:", storedToken);
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        setSidebarOpen(false); // Close the sidebar on large screens
+        setSidebarOpen(false);
       }
     };
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   useEffect(() => {
-    // Close sidebar when navigating to a new page on mobile
     const handleRouteChange = () => {
       if (window.innerWidth <= 768) {
         setSidebarOpen(false);
@@ -42,7 +41,6 @@ const Dashboard = () => {
     window.addEventListener("pushState", handleRouteChange);
     window.addEventListener("replaceState", handleRouteChange);
 
-    // Cleanup event listeners on component unmount
     return () => {
       window.removeEventListener("popstate", handleRouteChange);
       window.removeEventListener("pushState", handleRouteChange);
@@ -63,13 +61,18 @@ const Dashboard = () => {
 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
-      setSidebarOpen(false); // Close the sidebar on mobile view
+      setSidebarOpen(false);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("refresh_token");
+    navigate("/");
+    onLogout();
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 bg-gray-900 text-white w-64 p-6 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -130,24 +133,17 @@ const Dashboard = () => {
                 Tasks
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="login"
-                onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `${linkClasses} ${
-                    isActive ? "bg-gray-800 text-blue-400" : "hover:bg-gray-800"
-                  }`
-                }>
-                <ClipboardListIcon className="h-6 w-6 mr-3" />
-                Login
-              </NavLink>
-            </li>
           </ul>
         </nav>
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center mt-6 text-red-500 hover:text-red-700">
+          <LogoutIcon className="h-6 w-6 mr-2" />
+          Logout
+        </button>
       </aside>
 
-      {/* Main Content Area */}
       <div className="flex flex-col flex-grow w-full">
         <header className="lg:hidden flex items-center p-4 bg-gray-800 text-white">
           <button
@@ -162,7 +158,7 @@ const Dashboard = () => {
           <h1 className="text-xl ml-4">Admin Dashboard</h1>
         </header>
         <main className="flex-grow p-6">
-          <Outlet /> {/* Content for the selected route */}
+          <Outlet />
         </main>
       </div>
     </div>
