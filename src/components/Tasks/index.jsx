@@ -60,7 +60,6 @@ const Tasks = () => {
   };
 
   const handleEditClick = (task) => {
-    // Convert ISO string to "YYYY-MM-DD" format for editing
     const formattedDueDate = new Date(task.due_date)
       .toISOString()
       .split("T")[0];
@@ -130,7 +129,7 @@ const Tasks = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow-md">
+    <div className="max-w-10xl mx-auto p-6 bg-white border border-gray-200 rounded-lg shadow-md">
       {showForm && (
         <>
           <h2 className="text-2xl font-semibold mb-4">
@@ -277,7 +276,7 @@ const Tasks = () => {
           </button>
 
           {/* Tasks List */}
-          <div>
+          {/* <div>
             <h3 className="text-xl font-semibold mb-4">Tasks List</h3>
             <ul className="space-y-4">
               {tasks.map((task) => (
@@ -290,6 +289,7 @@ const Tasks = () => {
                       Due Date: {new Date(task.due_date).toLocaleDateString()}
                     </p>
                     <p className="text-sm">Priority: {task.priority}</p>
+                    <p className="text-sm">Status: {task.status}</p>
                     <p className="text-sm">
                       Assigner:{" "}
                       {
@@ -314,6 +314,79 @@ const Tasks = () => {
                     <button
                       onClick={() => handleDeleteClick(task._id)}
                       className="p-1 text-white bg-red-500 rounded hover:bg-red-600">
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div> */}
+          <div>
+            <h3 className="text-2xl font-bold mb-6">Tasks List</h3>
+
+            <div className="mb-6">
+              {tasks.map((task) => (
+                <span
+                  key={task._id}
+                  className={`inline-block px-3 py-1 text-sm font-semibold text-white rounded-full mb-4 ${
+                    task.status === "new"
+                      ? "bg-blue-500"
+                      : task.status === "In Process"
+                      ? "bg-yellow-500"
+                      : task.status === "Complete"
+                      ? "bg-green-500"
+                      : "bg-gray-500"
+                  }`}>
+                  {task.status}
+                </span>
+              ))}
+            </div>
+
+            <ul className="space-y-4">
+              {tasks.map((task) => (
+                <li
+                  key={task._id}
+                  className={`flex items-center justify-between p-4 border rounded-lg shadow-md ${
+                    task.status === "New"
+                      ? "bg-blue-100 border-blue-500"
+                      : task.status === "In Process"
+                      ? "bg-yellow-100 border-yellow-500"
+                      : task.status === "Complete"
+                      ? "bg-green-100 border-green-500"
+                      : "bg-gray-100 border-gray-300"
+                  }`}>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-700">
+                      {task.description}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      Due Date: {new Date(task.due_date).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm">Priority: {task.priority}</p>
+                    <p className="text-sm">
+                      Assigner:{" "}
+                      {
+                        employees.find((emp) => emp._id === task.assigner_id)
+                          ?.email
+                      }
+                    </p>
+                    <p className="text-sm">
+                      Assignee:{" "}
+                      {
+                        employees.find((emp) => emp._id === task.assignee_id)
+                          ?.email
+                      }
+                    </p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleEditClick(task)}
+                      className="p-2 text-white bg-green-500 rounded hover:bg-green-600">
+                      <PencilIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(task._id)}
+                      className="p-2 text-white bg-red-500 rounded hover:bg-red-600">
                       <TrashIcon className="w-5 h-5" />
                     </button>
                   </div>

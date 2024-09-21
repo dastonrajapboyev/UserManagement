@@ -90,10 +90,11 @@ import Departments from "./components/Departments";
 import CreateDepartment from "./components/CreateDepartments/index";
 import AddAdmin from "./components/LoginPage";
 import "./App.css";
-import EmployeeCreate from "./components/Employees";
-import EmployeeEdit from "./components/EmployeeEdit";
+// import EmployeeCreate from "./components/Employees";
+// import EmployeeEdit from "./components/EmployeeEdit";
 import Tasks from "./components/Tasks";
-import EmployeeList from "./components/EmployeList";
+import Employeess from "./components/Employeess";
+// import EmployeeList from "./components/EmployeList";
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
 
@@ -147,10 +148,11 @@ function App() {
           }>
           <Route path="departments" element={<Departments />} />
           <Route path="create-department" element={<CreateDepartment />} />
-          <Route path="employee-create" element={<EmployeeCreate />} />
-          <Route path="employees/update/:id" element={<EmployeeEdit />} />
+          {/* <Route path="employee-create" element={<EmployeeCreate />} /> */}
+          {/* <Route path="employees/update/:id" element={<EmployeeEdit />} /> */}
           <Route path="tasks" element={<Tasks />} />
-          <Route path="employees" element={<EmployeeList />} />
+          {/* <Route path="employees" element={<EmployeeList />} /> */}
+          <Route path="employees" element={<Employeess />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
