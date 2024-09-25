@@ -3,6 +3,22 @@ import { useNavigate } from "react-router-dom";
 import instance from "../Service/index";
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/solid";
 
+const AlertMessage = ({ message, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className="fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 p-4 bg-blue-500 text-white rounded shadow-lg z-50">
+      {message}
+    </div>
+  );
+};
+
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeData, setEmployeeData] = useState({
@@ -11,15 +27,14 @@ const EmployeeManagement = () => {
     password: "",
   });
   const [editId, setEditId] = useState(null);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const token = localStorage.getItem("refresh_token");
+        const token = localStorage.getItem("token");
         const response = await instance.get("/employees", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -27,7 +42,7 @@ const EmployeeManagement = () => {
         });
         setEmployees(response.data);
       } catch (err) {
-        setError("Failed to fetch employees.");
+        showAlert("Failed to fetch employees.");
         console.error("Error fetching employees:", err);
       }
     };
@@ -35,19 +50,30 @@ const EmployeeManagement = () => {
     fetchEmployees();
   }, []);
 
+  const showAlert = (message) => {
+    setAlertMessage(message);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEmployeeData({ ...employeeData, [name]: value });
   };
 
+  const isFormValid = () => {
+    return (
+      employeeData.full_name &&
+      employeeData.email &&
+      (!editId ? employeeData.password : true)
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       let response;
 
       if (editId) {
-        // Update existing employee
         response = await instance.put(
           `/employees/update/${editId}`,
           employeeData,
@@ -57,42 +83,31 @@ const EmployeeManagement = () => {
             },
           }
         );
-
-        // Update the employee in the list
         setEmployees((prevEmployees) =>
           prevEmployees.map((emp) =>
             emp._id === editId ? { ...emp, ...employeeData } : emp
           )
         );
+        showAlert("Employee successfully updated.");
       } else {
-        // Create new employee
         response = await instance.post("/employees/create", employeeData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        // Add the new employee to the list
         setEmployees((prevEmployees) => [...prevEmployees, response.data]);
+        showAlert("Employee successfully added.");
       }
 
       if (response.status >= 200 && response.status < 300) {
-        setMessage(
-          editId
-            ? "Employee successfully updated."
-            : "Employee successfully added."
-        );
         setEmployeeData({ full_name: "", email: "", password: "" });
         setEditId(null);
         setIsCreating(false);
-
-        // Navigate immediately after updating the state
-        navigate("/dashboard/employees");
       } else {
-        setError("Error saving employee.");
+        showAlert("Error saving employee.");
       }
     } catch (error) {
-      setError("Error saving employee.");
+      showAlert("Error saving employee.");
       console.error("Error:", error.response || error.message);
     }
   };
@@ -101,15 +116,16 @@ const EmployeeManagement = () => {
     if (!id) return;
 
     try {
-      const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       await instance.delete(`/employees/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setEmployees(employees.filter((employee) => employee._id !== id));
+      showAlert("Employee successfully deleted.");
     } catch (err) {
-      setError("Failed to delete employee.");
+      showAlert("Failed to delete employee.");
       console.error("Error deleting employee:", err);
     }
   };
@@ -157,71 +173,73 @@ const EmployeeManagement = () => {
       )}
       <button
         type="submit"
-        className="w-full py-2 px-4 text-white bg-blue-500 rounded hover:bg-blue-600">
+        disabled={!isFormValid()}
+        className={`w-full py-2 px-4 text-white ${
+          isFormValid()
+            ? "bg-blue-500 hover:bg-blue-600"
+            : "bg-gray-300 cursor-not-allowed"
+        } rounded`}>
         {editId ? "Update Employee" : "Add Employee"}
       </button>
     </form>
   );
 
   const renderEmployeeList = () => (
-    <>
-      {/* <h3 className="text-xl font-semibold mt-6">Employees Lista</h3> */}
-      <div className="overflow-x-auto mt-4">
-        <table className="w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Full Name
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Email
-              </th>
-              <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+    <div className="overflow-x-auto mt-4">
+      <table className="w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+              Full Name
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+              Role
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+              Email
+            </th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {employees.map((employee, id) => (
+            <tr key={id} className="hover:bg-gray-100">
+              <td className="px-4 py-4 text-sm text-gray-900">
+                {employee.full_name}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-900">
+                {employee.role}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-900">
+                {employee.email}
+              </td>
+              <td className="px-4 py-4 text-sm text-gray-900 flex space-x-4">
+                <button
+                  onClick={() => {
+                    setEditId(employee._id);
+                    setEmployeeData({
+                      full_name: employee.full_name,
+                      email: employee.email,
+                      password: "",
+                    });
+                    setIsCreating(true);
+                  }}
+                  className="text-blue-500 hover:text-blue-700">
+                  <PencilIcon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => handleDelete(employee._id)}
+                  className="text-red-500 hover:text-red-700">
+                  <TrashIcon className="h-5 w-5" />
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {employees.map((employee, id) => (
-              <tr key={id} className="hover:bg-gray-100">
-                <td className="px-4 py-4 text-sm text-gray-900">
-                  {employee.full_name}
-                </td>
-                <td className="px-4 py-4 text-sm text-gray-900">
-                  {employee.role}
-                </td>
-                <td className="px-4 py-4 text-sm text-gray-900">
-                  {employee.email}
-                </td>
-                <td className="px-4 py-4 text-sm text-gray-900 flex space-x-4">
-                  <button
-                    onClick={() => {
-                      setEditId(employee._id);
-                      setEmployeeData({
-                        full_name: employee.full_name,
-                        email: employee.email,
-                        password: "",
-                      });
-                      setIsCreating(true);
-                    }}
-                    className="text-blue-500 hover:text-blue-700">
-                    <PencilIcon className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(employee._id)}
-                    className="text-red-500 hover:text-red-700">
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 
   return (
@@ -246,8 +264,12 @@ const EmployeeManagement = () => {
         </button>
       </div>
 
-      {message && <p className="mb-4 text-sm text-green-600">{message}</p>}
-      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+      {alertMessage && (
+        <AlertMessage
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+        />
+      )}
 
       {isCreating ? renderEmployeeForm() : renderEmployeeList()}
     </div>

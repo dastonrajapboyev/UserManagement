@@ -25,7 +25,8 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      // const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       const response = await instance.get("/tasks", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -39,7 +40,8 @@ const Tasks = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      // const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       const response = await instance.get("/employees", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -72,7 +74,8 @@ const Tasks = () => {
 
   const handleDeleteClick = async (taskId) => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      // const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       await instance.delete(`/tasks/delete/${taskId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +92,8 @@ const Tasks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("refresh_token");
+      // const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       const taskPayload = {
         ...taskData,
         due_date: taskData.due_date,
@@ -275,52 +279,6 @@ const Tasks = () => {
             <PlusIcon className="w-5 h-5 mr-2" /> Create Task
           </button>
 
-          {/* Tasks List */}
-          {/* <div>
-            <h3 className="text-xl font-semibold mb-4">Tasks List</h3>
-            <ul className="space-y-4">
-              {tasks.map((task) => (
-                <li
-                  key={task._id}
-                  className="flex items-center justify-between p-4 bg-gray-100 border rounded-lg">
-                  <div>
-                    <h4 className="font-bold">{task.description}</h4>
-                    <p className="text-sm">
-                      Due Date: {new Date(task.due_date).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm">Priority: {task.priority}</p>
-                    <p className="text-sm">Status: {task.status}</p>
-                    <p className="text-sm">
-                      Assigner:{" "}
-                      {
-                        employees.find((emp) => emp._id === task.assigner_id)
-                          ?.email
-                      }
-                    </p>
-                    <p className="text-sm">
-                      Assignee:{" "}
-                      {
-                        employees.find((emp) => emp._id === task.assignee_id)
-                          ?.email
-                      }
-                    </p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleEditClick(task)}
-                      className="p-1 text-white bg-green-500 rounded hover:bg-green-600">
-                      <PencilIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(task._id)}
-                      className="p-1 text-white bg-red-500 rounded hover:bg-red-600">
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div> */}
           <div>
             <h3 className="text-2xl font-bold mb-6">Tasks List</h3>
 

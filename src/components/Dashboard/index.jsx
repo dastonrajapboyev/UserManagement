@@ -23,13 +23,13 @@ const Dashboard = ({ onLogout }) => {
   const [departments, setDepartments] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isTokenValid, setIsTokenValid] = useState(true);
-  const token = localStorage.getItem("refresh_token");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
   const isDashboard = location.pathname === "/dashboard";
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("refresh_token");
+    const storedToken = localStorage.getItem("token");
     setIsTokenValid(!!storedToken);
 
     const fetchDepartments = async () => {
@@ -103,7 +103,7 @@ const Dashboard = ({ onLogout }) => {
 
   const handleLinkClick = () => {
     if (isDashboard) {
-      navigate("/dashboard/tasks");
+      navigate("/tasks");
     }
   };
 

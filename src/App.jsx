@@ -7,28 +7,24 @@ import {
 import Dashboard from "./components/Dashboard";
 import Departments from "./components/Departments";
 import CreateDepartment from "./components/CreateDepartments/index";
-import AddAdmin from "./components/LoginPage";
 import "./App.css";
-// import EmployeeCreate from "./components/Employees";
-// import EmployeeEdit from "./components/EmployeeEdit";
 import Tasks from "./components/Tasks";
 import Employeess from "./components/Employeess";
-// import EmployeeList from "./components/EmployeList";
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("refresh_token"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
     const handleStorageChange = () => {
-      const storedToken = localStorage.getItem("refresh_token");
+      const storedToken = localStorage.getItem("token");
       setToken(storedToken);
     };
 
     window.addEventListener("storage", handleStorageChange);
 
-    const storedToken = localStorage.getItem("refresh_token");
+    const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
     }
@@ -39,7 +35,7 @@ function App() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("token");
     setToken(null);
   };
 
@@ -50,7 +46,7 @@ function App() {
           path="/"
           element={
             !token ? (
-              <AddAdmin setToken={setToken} />
+              <Login setToken={setToken} />
             ) : (
               <Navigate to="/dashboard" replace />
             )
@@ -67,10 +63,7 @@ function App() {
           }>
           <Route path="departments" element={<Departments />} />
           <Route path="create-department" element={<CreateDepartment />} />
-          {/* <Route path="employee-create" element={<EmployeeCreate />} /> */}
-          {/* <Route path="employees/update/:id" element={<EmployeeEdit />} /> */}
           <Route path="tasks" element={<Tasks />} />
-          {/* <Route path="employees" element={<EmployeeList />} /> */}
           <Route path="employees" element={<Employeess />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />

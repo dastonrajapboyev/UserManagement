@@ -11,12 +11,25 @@ const CreateDepartment = ({ department, onSave }) => {
     localityType: { code: "", name: "" },
     parent: null,
   });
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   useEffect(() => {
     if (department) {
       setNewDepartment(department);
     }
   }, [department]);
+
+  useEffect(() => {
+    const isFormComplete =
+      newDepartment.name &&
+      newDepartment.code &&
+      newDepartment.structureType.name &&
+      newDepartment.structureType.code &&
+      newDepartment.localityType.name &&
+      newDepartment.localityType.code;
+
+    setIsButtonDisabled(!isFormComplete);
+  }, [newDepartment]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +49,7 @@ const CreateDepartment = ({ department, onSave }) => {
   };
 
   const handleSave = async () => {
-    const token = localStorage.getItem("refresh_token");
+    const token = localStorage.getItem("token");
 
     try {
       if (department) {
@@ -49,12 +62,14 @@ const CreateDepartment = ({ department, onSave }) => {
             },
           }
         );
+        window.alert("Department updated successfully!");
       } else {
         await instance.post("/departments/create", newDepartment, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+        window.alert("Department created successfully!");
       }
 
       if (onSave) {
@@ -64,6 +79,7 @@ const CreateDepartment = ({ department, onSave }) => {
       navigate("/dashboard/departments");
     } catch (error) {
       console.error("Error saving department:", error);
+      window.alert("An error occurred while saving the department.");
     }
   };
 
@@ -74,7 +90,7 @@ const CreateDepartment = ({ department, onSave }) => {
       </h2>
 
       <button
-        onClick={() => navigate("/dashboard/departments")}
+        onClick={() => navigate("/departments")}
         className="mb-4 text-indigo-600 hover:underline">
         ← Back to Departments
       </button>
@@ -138,7 +154,12 @@ const CreateDepartment = ({ department, onSave }) => {
         />
         <button
           onClick={handleSave}
-          className="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          disabled={isButtonDisabled}
+          className={`w-full text-white font-bold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+            isButtonDisabled
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-indigo-600 hover:bg-indigo-500"
+          }`}>
           {department ? "Update Department" : "Create Department"}
         </button>
       </div>

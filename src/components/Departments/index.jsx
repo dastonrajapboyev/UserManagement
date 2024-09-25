@@ -12,7 +12,7 @@ const Departments = () => {
 
   const fetchDepartments = async () => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       const response = await instance.get("/departments", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ const Departments = () => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("refresh_token");
+      const token = localStorage.getItem("token");
       await instance.delete(`/departments/delete/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
