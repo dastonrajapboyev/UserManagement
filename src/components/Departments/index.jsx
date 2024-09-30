@@ -78,18 +78,19 @@ const Departments = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-4">
-        Departments
-      </h1>
-      <div className="flex justify-start mb-6">
-        {!isCreating && (
-          <button
-            onClick={handleCreateNew}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-500 transition duration-300 ease-in-out">
-            <PlusIcon className="h-5 w-5 mr-2" />
-            Create New Department
-          </button>
-        )}
+      <div className="flex justify-between">
+        <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-4">
+          Departments
+        </h1>
+        <div className="flex justify-start mb-6">
+          {!isCreating && (
+            <button
+              onClick={handleCreateNew}
+              className="flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-500 transition duration-300 ease-in-out">
+              <PlusIcon className="h-5 w-5 mr-2" />
+            </button>
+          )}
+        </div>
       </div>
       {isCreating ? (
         <CreateDepartment department={selectedDepartment} onSave={handleSave} />

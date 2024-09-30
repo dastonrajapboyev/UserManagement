@@ -23,15 +23,13 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle unauthorized errors
 instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized error, e.g., redirect to login
       console.error("Unauthorized. Redirecting to login...");
       localStorage.removeItem("token");
-      window.location.href = "/"; // Redirect to login page or another action
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }

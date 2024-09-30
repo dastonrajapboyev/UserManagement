@@ -25,7 +25,6 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      // const token = localStorage.getItem("refresh_token");
       const token = localStorage.getItem("token");
       const response = await instance.get("/tasks", {
         headers: {
@@ -40,7 +39,6 @@ const Tasks = () => {
 
   const fetchEmployees = async () => {
     try {
-      // const token = localStorage.getItem("refresh_token");
       const token = localStorage.getItem("token");
       const response = await instance.get("/employees", {
         headers: {
@@ -74,7 +72,6 @@ const Tasks = () => {
 
   const handleDeleteClick = async (taskId) => {
     try {
-      // const token = localStorage.getItem("refresh_token");
       const token = localStorage.getItem("token");
       await instance.delete(`/tasks/delete/${taskId}`, {
         headers: {
@@ -92,7 +89,6 @@ const Tasks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const token = localStorage.getItem("refresh_token");
       const token = localStorage.getItem("token");
       const taskPayload = {
         ...taskData,
@@ -141,7 +137,6 @@ const Tasks = () => {
           </h2>
           {message && <p className="mb-4 text-sm text-red-600">{message}</p>}
           <form onSubmit={handleSubmit}>
-            {/* Form Fields */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 Description
@@ -262,26 +257,26 @@ const Tasks = () => {
 
       {!showForm && (
         <>
-          <button
-            onClick={() => {
-              setShowForm(true);
-              setIsEditing(false);
-              setTaskData({
-                description: "",
-                due_date: "",
-                priority: "high",
-                status: "new",
-                assigner_id: "",
-                assignee_id: "",
-              });
-            }}
-            className="mb-4 py-2 px-4 text-white bg-blue-500 rounded hover:bg-blue-600 flex items-center">
-            <PlusIcon className="w-5 h-5 mr-2" /> Create Task
-          </button>
-
-          <div>
+          <div className="flex justify-between">
             <h3 className="text-2xl font-bold mb-6">Tasks List</h3>
-
+            <button
+              onClick={() => {
+                setShowForm(true);
+                setIsEditing(false);
+                setTaskData({
+                  description: "",
+                  due_date: "",
+                  priority: "high",
+                  status: "new",
+                  assigner_id: "",
+                  assignee_id: "",
+                });
+              }}
+              className="mb-4 py-2 px-4 text-white bg-blue-500 rounded hover:bg-blue-600 flex items-center">
+              <PlusIcon className="w-5 h-5 mr-2" />
+            </button>
+          </div>
+          <div>
             <div className="mb-6">
               {tasks.map((task) => (
                 <span

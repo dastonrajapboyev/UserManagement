@@ -4,7 +4,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
+// import Dashboard from "./components/Dashboard";
 import Departments from "./components/Departments";
 import CreateDepartment from "./components/CreateDepartments/index";
 import "./App.css";
@@ -12,6 +12,7 @@ import Tasks from "./components/Tasks";
 import Employeess from "./components/Employeess";
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
+import Dashboard from "./components/Dashboard/index";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));

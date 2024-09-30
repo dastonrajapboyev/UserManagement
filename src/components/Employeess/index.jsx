@@ -259,8 +259,8 @@ const EmployeeManagement = () => {
             setEmployeeData({ full_name: "", email: "", password: "" });
           }}
           className="flex items-center py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
-          <PlusIcon className="h-5 w-5 mr-2" />
-          {isCreating ? "Back to List" : "Add Employee"}
+          {!isCreating && <PlusIcon className="h-5 w-5 mr-2" />}
+          {isCreating ? "<" : ""}
         </button>
       </div>
 
