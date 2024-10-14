@@ -25,6 +25,7 @@ const Login = ({ setToken }) => {
       if (response.data.success) {
         const refreshToken = response.data.tokens.refreshToken;
         localStorage.setItem("token", refreshToken);
+        localStorage.setItem("userEmail", email);
         setToken(refreshToken);
         console.log(refreshToken, "ref");
         navigate("/dashboard");

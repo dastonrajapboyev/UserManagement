@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import instance from "../Service/index";
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/solid";
+import io from "socket.io-client";
+
+const socket = io("https://task-api.of-astora.me");
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -21,6 +24,16 @@ const Tasks = () => {
   useEffect(() => {
     fetchTasks();
     fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    socket.on("newTaskNotification", (data) => {
+      console.log("New task assigned:", data.description);
+    });
+
+    return () => {
+      socket.off("newTaskNotification");
+    };
   }, []);
 
   const fetchTasks = async () => {
@@ -107,6 +120,12 @@ const Tasks = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+        });
+        // Emit the new task created event
+        socket.emit("newTaskCreated", {
+          description: taskPayload.description,
+          assigner_id: taskPayload.assigner_id,
+          assignee_id: taskPayload.assignee_id,
         });
         setMessage("Task created successfully.");
       }

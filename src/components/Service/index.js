@@ -3,8 +3,6 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 const instance = axios.create({
-  // baseURL: "http://94.131.122.152:3002/api/",
-  // baseURL: "http://13.51.195.13:3002/api/",
   baseURL: "https://task-api.of-astora.me/api",
   headers: {
     "Content-Type": "application/json",
