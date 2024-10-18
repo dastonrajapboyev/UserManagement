@@ -48,6 +48,41 @@ const CreateDepartment = ({ department, onSave }) => {
     }
   };
 
+  // const handleSave = async () => {
+  //   const token = localStorage.getItem("token");
+
+  //   try {
+  //     if (department) {
+  //       await instance.put(
+  //         `/departments/update/${department._id}`,
+  //         newDepartment,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  //       window.alert("Department updated successfully!");
+  //     } else {
+  //       await instance.post("/departments/create", newDepartment, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       window.alert("Department created successfully!");
+  //     }
+
+  //     if (onSave) {
+  //       onSave();
+  //     }
+
+  //     navigate("/departments");
+  //   } catch (error) {
+  //     console.error("Error saving department:", error);
+  //     window.alert("An error occurred while saving the department.");
+  //   }
+  // };
+
   const handleSave = async () => {
     const token = localStorage.getItem("token");
 
@@ -72,34 +107,26 @@ const CreateDepartment = ({ department, onSave }) => {
         window.alert("Department created successfully!");
       }
 
+      // Notify parent component that save was successful
       if (onSave) {
-        onSave();
+        onSave(); // This can close the modal and refresh the department list
       }
-
-      navigate("/dashboard/departments");
     } catch (error) {
       console.error("Error saving department:", error);
       window.alert("An error occurred while saving the department.");
     }
   };
-
   return (
-    <div className="p-6 max-w-md mx-auto rounded-xl shadow-md space-y-4">
-      <h2 className="text-2xl font-bold text-center mb-4">
+    <div className=" mt-2 max-w-md   shadow-md space-y-0">
+      <h2 className="text-2xl font-bold text-center mb-2">
         {department ? "Edit Department" : "Create Department"}
       </h2>
 
-      <button
-        onClick={() => navigate("/departments")}
-        className="mb-4 text-indigo-600 hover:underline">
-        ← Back to Departments
-      </button>
-
-      <div className="space-y-3">
+      <div className="space-y-3 w-full p-0">
         <input
           type="text"
           name="name"
-          placeholder="Department Name"
+          placeholder="Bo'lim nomi"
           value={newDepartment.name}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -107,7 +134,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="code"
-          placeholder="Department Code"
+          placeholder="Bolim kodi"
           value={newDepartment.code}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -115,7 +142,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="structureType.name"
-          placeholder="Structure Type Name"
+          placeholder="Struktura turi nomi"
           value={newDepartment.structureType.name}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -123,7 +150,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="structureType.code"
-          placeholder="Structure Type Code"
+          placeholder="Struktura turi kodi"
           value={newDepartment.structureType.code}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -131,7 +158,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="localityType.name"
-          placeholder="Locality Type Name"
+          placeholder="Hudud turi nomi"
           value={newDepartment.localityType.name}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -139,7 +166,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="localityType.code"
-          placeholder="Locality Type Code"
+          placeholder="Hudud turi kodi"
           value={newDepartment.localityType.code}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -147,7 +174,7 @@ const CreateDepartment = ({ department, onSave }) => {
         <input
           type="text"
           name="parent"
-          placeholder="Parent Department (optional)"
+          placeholder="Ota-onalar bo'limi (ixtiyoriy)"
           value={newDepartment.parent || ""}
           onChange={handleChange}
           className="block w-full px-3 py-2 border rounded-md text-sm shadow-sm placeholder-gray-500 text-black focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"

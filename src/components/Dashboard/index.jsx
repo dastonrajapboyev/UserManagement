@@ -72,7 +72,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
       setPreviousDepartments(departments.length);
       setPreviousEmployees(employees.length);
       setPreviousSubscribers(subscribers);
-    }, 6000); // 1 minute interval
+    }, 1000); // 1 minute interval
 
     return () => clearInterval(timer);
   }, [tasks, departments, employees, subscribers]);
@@ -632,7 +632,6 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
           </div>
         </div>
       )}
-      );
     </>
   );
 };
