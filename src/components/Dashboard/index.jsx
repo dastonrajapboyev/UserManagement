@@ -177,7 +177,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
     navigate("/dashboard/tasks");
   };
   useEffect(() => {
-    const storedEmail = localStorage.getItem("userEmail");
+    const storedEmail = localStorage.getItem("userLogin");
     if (storedEmail) {
       setUserEmail(storedEmail);
     }
@@ -526,7 +526,9 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                               </dt>
                               <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
                                 <p className="text-2xl font-semibold text-gray-900">
-                                  {employees.length}
+                                  {" "}
+                                  {employees.hemis.length +
+                                    employees.data.length}
                                 </p>
                                 <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                   <button
@@ -560,7 +562,9 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                               </dt>
                               <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
                                 <p className="text-2xl font-semibold text-gray-900">
-                                  {departments.length}
+                                  {" "}
+                                  {departments.hemis.length +
+                                    departments.data.length}
                                 </p>
                                 <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                   <button

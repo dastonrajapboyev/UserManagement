@@ -744,7 +744,8 @@
 //   );
 // };
 
-// export default Departments;import instance from "../Service/index";
+// export default Departments;
+
 import CreateDepartment from "../CreateDepartments"; // Ensure this is your form component
 import { Dialog } from "@headlessui/react"; // Import Dialog from Headless UI
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/solid";
@@ -951,6 +952,7 @@ const Departments = () => {
                 onSave={handleSave}
               />
             </div>
+
             <button
               onClick={closeModal} // Close the modal
               className="mt-4 bg-gray-600 text-white py-2 px-4 rounded-md">
