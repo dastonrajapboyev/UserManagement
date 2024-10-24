@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 
 const instance = axios.create({
   // baseURL: "https://task-api.of-astora.me/api",
-  baseURL: "http://176.57.218.190:4107/api",
+  baseURL: "http://176.57.218.190:4107",
   headers: {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),

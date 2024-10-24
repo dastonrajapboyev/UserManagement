@@ -260,21 +260,23 @@ const EmployeeCRUD = ({
   refreshEmployees,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [imageFile, setImageFile] = useState(null); // State for the selected image file
+  const [imageFile, setImageFile] = useState(""); // State for the selected image file
   const [imagePreview, setImagePreview] = useState(null); // State for the image preview
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEmployeeData({ ...employeeData, [name]: value });
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Set the preview URL
+        setImagePreview(reader.result);
+        setEmployeeData((employeeData) => ({
+          ...employeeData,
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -290,19 +292,24 @@ const EmployeeCRUD = ({
       formData.append("role", employeeData.role);
       formData.append("login", employeeData.login);
 
-      // Include image file if it exists
-      let imageUrl = null;
+      let imageUrl = "";
       if (imageFile) {
         const imageFormData = new FormData();
         imageFormData.append("image", imageFile);
 
-        // Upload the image
-        const imageResponse = await instance.post("/image", imageFormData, {
-          headers: { Authorization: `Bearer ${token}` },
+        for (let [key, value] of imageFormData.entries()) {
+          console.log(key, value);
+        }
+        const imageResponse = await instance.get("/image", imageFormData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         });
-
+        console.log("Image upload response:", imageResponse);
         if (imageResponse.data?.success) {
           imageUrl = imageResponse.data.url; // Get the image URL from response
+          console.log(imageUrl);
         } else {
           showAlert("Failed to upload image.");
           setLoading(false);
@@ -391,6 +398,7 @@ const EmployeeCRUD = ({
             role: response.data.role || "",
             login: response.data.login || "",
             password: response.data.password || "",
+            image: response.data.image.url,
           });
         } catch (error) {
           showAlert("Error fetching employee data.");
@@ -405,9 +413,10 @@ const EmployeeCRUD = ({
         role: "",
         login: "",
         password: "",
+        image: "",
       });
-      setImageFile(null); // Reset image file state
-      setImagePreview(null); // Reset image preview state
+      setImageFile(""); // Reset image file state
+      setImagePreview(""); // Reset image preview state
     }
   }, [editId, setEmployeeData]);
 
@@ -418,9 +427,10 @@ const EmployeeCRUD = ({
       role: "",
       login: "",
       password: "",
+      image: "",
     });
-    setImageFile(null); // Reset image file state
-    setImagePreview(null); // Reset image preview state
+    setImageFile("");
+    setImagePreview("");
   };
 
   return (
@@ -511,7 +521,10 @@ const EmployeeCRUD = ({
                 />
                 {imagePreview && (
                   <img
-                    src={imagePreview}
+                    src={
+                      imagePreview ||
+                      "https://static-00.iconduck.com/assets.00/add-square-light-icon-2048x2048-2pm9jm5u.png"
+                    }
                     alt="Image Preview"
                     className="mt-2 w-full h-32 object-cover rounded-md"
                   />

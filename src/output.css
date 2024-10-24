@@ -964,10 +964,6 @@ select {
   height: 100%;
 }
 
-.h-24 {
-  height: 6rem;
-}
-
 .max-h-\[55vh\] {
   max-height: 55vh;
 }
@@ -1002,10 +998,6 @@ select {
 
 .w-px {
   width: 1px;
-}
-
-.w-24 {
-  width: 6rem;
 }
 
 .min-w-full {
