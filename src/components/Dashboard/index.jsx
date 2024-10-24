@@ -30,7 +30,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
   const [previousEmployees, setPreviousEmployees] = useState(0);
   const [previousSubscribers, setPreviousSubscribers] = useState(0);
 
-  const [employees, setEmployees] = useState([]);
+  const [employee, setEmployees] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
 
   const [date, setDate] = useState(new Date());
 
-  const hiddenRoutes = ["/employees", "/departments", "/tasks"];
+  const hiddenRoutes = ["/employee", "/departments", "/tasks"];
 
   const isMainHidden = hiddenRoutes.some((route) =>
     location.pathname.includes(route)
@@ -61,7 +61,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
   useEffect(() => {
     setPreviousTasks(tasks.length);
     setPreviousDepartments(departments.length);
-    setPreviousEmployees(employees.length);
+    setPreviousEmployees(employee.length);
     setPreviousSubscribers(subscribers);
   }, []);
 
@@ -70,12 +70,12 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
     const timer = setInterval(() => {
       setPreviousTasks(tasks.length);
       setPreviousDepartments(departments.length);
-      setPreviousEmployees(employees.length);
+      setPreviousEmployees(employee.length);
       setPreviousSubscribers(subscribers);
     }, 1000); // 1 minute interval
 
     return () => clearInterval(timer);
-  }, [tasks, departments, employees, subscribers]);
+  }, [tasks, departments, employee, subscribers]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -170,7 +170,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
   };
 
   const handleViewAllEmployees = () => {
-    navigate("/dashboard/employees");
+    navigate("/dashboard/employee");
   };
 
   const handleViewAllTasks = () => {
@@ -251,7 +251,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                           </li>
                           <li>
                             <NavLink
-                              to="employees"
+                              to="employee"
                               onClick={handleLinkClick}
                               className={({ isActive }) =>
                                 `text-white hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold ${
@@ -261,7 +261,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                                 }`
                               }>
                               <UserGroupIcon className="h-6 w-6 mr-3" />
-                              Employees
+                              Employee
                             </NavLink>
                           </li>
                           <li>
@@ -317,7 +317,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                       </li>
                       <li>
                         <NavLink
-                          to="employees"
+                          to="employee"
                           onClick={handleLinkClick}
                           className={({ isActive }) =>
                             `text-white hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold ${
@@ -327,7 +327,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                             }`
                           }>
                           <UserGroupIcon className="h-6 w-6 mr-3" />
-                          Employees
+                          Employee
                         </NavLink>
                       </li>
                       <li>
@@ -527,8 +527,7 @@ const Dashboard = ({ onLogout, subscribers = 0 }) => {
                               <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
                                 <p className="text-2xl font-semibold text-gray-900">
                                   {" "}
-                                  {employees.hemis.length +
-                                    employees.data.length}
+                                  {employee.hemis.length + employee.data.length}
                                 </p>
                                 <div className="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                   <button

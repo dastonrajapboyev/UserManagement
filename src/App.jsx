@@ -87,11 +87,13 @@ import Departments from "./components/Departments";
 import CreateDepartment from "./components/CreateDepartments/index";
 import "./App.css";
 import Tasks from "./components/Tasks";
-import Employeess from "./components/Employeess";
+// import Employeess from "./components/Employeess";
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard/index";
 import EmployeeDetail from "./components/EmployeeDetail";
+import EmployeeManagement from "./components/Employee/EmployeeManagement";
+// import EmployeeManagement from "./components/Employeess";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -144,7 +146,8 @@ function App() {
           <Route path="departments" element={<Departments />} />
           <Route path="create-department" element={<CreateDepartment />} />
           <Route path="tasks" element={<Tasks />} />
-          <Route path="employees" element={<Employeess />} />
+          <Route path="employee" element={<EmployeeManagement />} />
+          {/* <Route path="employees" element={<Employeess />} /> */}
           {/* Change absolute path to relative */}
           <Route path="employees/:employeeId" element={<EmployeeDetail />} />
         </Route>
